@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1600px; height: 800px; overflow: hidden; }
+  body {
+    font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    background:
+      radial-gradient(ellipse 900px 600px at 75% 20%, rgba(63, 185, 80, 0.07), transparent 60%),
+      radial-gradient(circle, #1b2330 1px, transparent 1.2px) 0 0 / 34px 34px,
+      #0b0e14;
+    color: #e6edf3;
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    padding: 64px 72px;
+  }
+
+  /* ---------- left: the conversation ---------- */
+  .terminal {
+    width: 820px;
+    height: 620px;
+    background: #10151d;
+    border: 1px solid #232c3a;
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .titlebar {
+    height: 46px;
+    background: #161c26;
+    border-bottom: 1px solid #232c3a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 18px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  .titlebar .name {
+    margin-left: 14px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    color: #7d8a9b;
+  }
+  .chat { flex: 1; display: flex; flex-direction: column; gap: 18px; padding: 30px 34px; }
+  .row { display: flex; }
+  .row.user { justify-content: flex-end; }
+  .bubble {
+    max-width: 78%;
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-size: 19px;
+    line-height: 1.45;
+  }
+  .row.agent .bubble {
+    background: #1b2330;
+    border: 1px solid #2a3546;
+    border-bottom-left-radius: 5px;
+    color: #c9d4e0;
+  }
+  .row.user .bubble {
+    background: #1f6feb;
+    color: #f0f6ff;
+    border-bottom-right-radius: 5px;
+  }
+  .bubble .who {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.65;
+    margin-bottom: 5px;
+  }
+  .options { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .opt {
+    font-size: 15px;
+    padding: 6px 14px;
+    border-radius: 9px;
+    border: 1px solid #33507e;
+    color: #9ecbff;
+    background: rgba(31, 111, 235, 0.12);
+  }
+  .opt.rec { background: rgba(63, 185, 80, 0.14); border-color: #2c7a41; color: #7ee2a8; }
+  .verdict {
+    margin: 4px 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 20px;
+    border: 1px solid #2c7a41;
+    background: rgba(63, 185, 80, 0.08);
+    border-radius: 14px;
+    width: fit-content;
+  }
+  .ringwrap { position: relative; width: 88px; height: 88px; }
+  .ringwrap .pct {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 19px; font-weight: 600; color: #7ee2a8;
+  }
+  .verdict .vtext { font-size: 18px; color: #c9d4e0; line-height: 1.5; }
+  .verdict .vtext b { color: #e6edf3; font-weight: 600; }
+  .verdict .vtext .sub { color: #7d8a9b; font-size: 15px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+
+  /* ---------- right: the identity ---------- */
+  .right { flex: 1; display: flex; flex-direction: column; gap: 34px; }
+  .brand {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 104px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #e6edf3;
+    line-height: 1;
+  }
+  .brand .cursor {
+    display: inline-block;
+    width: 46px; height: 88px;
+    margin-left: 14px;
+    vertical-align: -6px;
+    background: #3fb950;
+    border-radius: 6px;
+  }
+  .tagline {
+    font-size: 27px;
+    line-height: 1.5;
+    color: #9aa7b5;
+    max-width: 560px;
+  }
+  .pills { display: flex; flex-direction: column; gap: 14px; }
+  .pill {
+    display: flex; align-items: baseline; gap: 14px;
+    width: fit-content;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 20px;
+    color: #7ee2a8;
+    background: #12181f;
+    border: 1px solid #24402d;
+    padding: 12px 20px;
+    border-radius: 12px;
+  }
+  .pill span { font-family: -apple-system, "SF Pro Text", sans-serif; font-size: 16px; color: #7d8a9b; }
+  .flow { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+  .step {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    width: 92px;
+  }
+  .step .ic {
+    width: 64px; height: 64px;
+    border-radius: 14px;
+    background: #12181f;
+    border: 1px solid #2a3546;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step .lb { font-size: 14px; color: #7d8a9b; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .arrow { color: #3d4a5c; font-size: 22px; margin-top: -22px; }
+</style>
+</head>
+<body>
+
+  <div class="terminal">
+    <div class="titlebar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="name">agent · session</div>
+    </div>
+    <div class="chat">
+      <div class="row user">
+        <div class="bubble"><div class="who">you</div>make my app better</div>
+      </div>
+      <div class="row agent">
+        <div class="bubble">
+          <div class="who">agent</div>
+          Better how? Faster, prettier, or fewer bugs?
+          <div class="options">
+            <div class="opt rec">faster (Recommended)</div>
+            <div class="opt">prettier</div>
+            <div class="opt">fewer bugs</div>
+          </div>
+        </div>
+      </div>
+      <div class="row user">
+        <div class="bubble"><div class="who">you</div>faster. the reading pages first</div>
+      </div>
+      <div class="verdict">
+        <div class="ringwrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle cx="44" cy="44" r="36" fill="none" stroke="#22303f" stroke-width="8"/>
+            <circle cx="44" cy="44" r="36" fill="none" stroke="#3fb950" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="214.8 226.2"
+                    stroke-dashoffset="0" transform="rotate(-90 44 44)"/>
+          </svg>
+          <div class="pct">95%</div>
+        </div>
+        <div class="vtext">
+          <b>Task brief is ready.</b><br>
+          goal · scope · deliverable · assumptions<br>
+          <span class="sub">start work? [yes / change something]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="brand">ask-first<span class="cursor"></span></div>
+    <div class="tagline">Two agent skills that ask before they act.</div>
+    <div class="pills">
+      <div class="pill">clarify-first <span>interview until the task is 95% clear</span></div>
+      <div class="pill">knock-first <span>detect, get consent, test, hand the Mac back</span></div>
+    </div>
+    <div class="flow">
+      <div class="step">
+        <div class="ic">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#e3b341" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="10" width="16" height="11" rx="2.5"/>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+            <circle cx="12" cy="15.5" r="1.4" fill="#e3b341" stroke="none"/>
+          </svg>
+        </div>
+        <div class="lb">ask</div>
+      </div>
+      <div class="arrow">-></div>
+      <div class="step">
+        <div class="ic">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3.5" y="5" width="17" height="11" rx="2"/>
+            <path d="M2 19.5h20"/>
+          </svg>
+        </div>
+        <div class="lb">run</div>
+      </div>
+      <div class="arrow">-></div>
+      <div class="step">
+        <div class="ic">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#7ee2a8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7.5-2.5 7.5h17S18 15 18 9"/>
+            <path d="M10 20a2.2 2.2 0 0 0 4 0"/>
+          </svg>
+        </div>
+        <div class="lb">hand back</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
