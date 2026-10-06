@@ -10,13 +10,41 @@ Both problems look the same from the user's side: an agent guesses, acts on the 
 
 ## Install
 
+The [skills CLI](https://skills.sh) handles host detection for Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, opencode, Amp, and the rest of its supported hosts:
+
 ```bash
-git clone https://github.com/M1688-cpu/ask-first.git
-mkdir -p ~/.zcode/skills
-cp -r ask-first/skills/clarify-first ask-first/skills/knock-first ~/.zcode/skills/
+npx skills add M1688-cpu/ask-first -g
 ```
 
-For Claude Code use `~/.claude/skills` instead of `~/.zcode/skills`. Any `~/.agents/skills` directory works the same way. After installing, the skills trigger on their own when their conditions match; you can also invoke them by name.
+Or run the installer in this repo, which detects the agents on your machine and copies into each one (`--all` for every supported agent, `--list` to preview, `--remove` to uninstall):
+
+```bash
+git clone https://github.com/M1688-cpu/ask-first.git
+bash ask-first/install.sh
+```
+
+Claude Code can also install it as a plugin:
+
+```text
+/plugin marketplace add M1688-cpu/ask-first
+/plugin install ask-first@ask-first
+```
+
+For a manual copy, these are the folders each agent reads:
+
+| Agent | Skills folder |
+| --- | --- |
+| Claude Code | `~/.claude/skills` |
+| Codex | `~/.codex/skills` |
+| Cursor | `~/.cursor/skills` |
+| Gemini CLI | `~/.gemini/skills` |
+| opencode | `~/.config/opencode/skill` |
+| Amp | `~/.amp/skills` |
+| OpenClaw | `~/.openclaw/skills` |
+| ZCode | `~/.zcode/skills` |
+| any agent reading the open format | `~/.agents/skills` |
+
+After installing, the skills trigger on their own when their conditions match; you can also invoke them by name.
 
 ## clarify-first
 
@@ -76,6 +104,8 @@ agent:  Posted a notification: "Testing done: 3 screenshots saved."
 skills/clarify-first/SKILL.md        the interview skill
 skills/knock-first/SKILL.md          the desktop-consent skill
 skills/knock-first/scripts/          activity check and notification helpers (macOS)
+install.sh                           detect installed agents and copy into each
+.claude-plugin/                      Claude Code plugin manifest
 media/cover.html                     source of the cover image
 ```
 

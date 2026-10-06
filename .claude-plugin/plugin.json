@@ -1,0 +1,12 @@
+{
+  "name": "ask-first",
+  "description": "Two agent skills that ask before they act: clarify-first interviews the user before starting an ambiguous task; knock-first gets consent before taking over the desktop for testing.",
+  "version": "1.0.0",
+  "author": {
+    "name": "M1688-cpu"
+  },
+  "homepage": "https://github.com/M1688-cpu/ask-first",
+  "repository": "https://github.com/M1688-cpu/ask-first",
+  "license": "MIT",
+  "keywords": ["skills", "clarification", "consent", "desktop-testing"]
+}
