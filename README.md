@@ -2,6 +2,8 @@
 
 # ask-first
 
+English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Português](README.pt.md)
+
 Two agent skills that ask before they act.
 
 `clarify-first` interviews you one question at a time until the task is specific enough to build, then confirms a written brief before any work starts. `knock-first` checks whether you are at the computer and gets your permission before the agent drives the desktop for testing, then notifies you when the machine is yours again.
